@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog 
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+
+    <changeSet id="create-question-concept" author="Caiden Sunlin">
+        <createTable tableName="question_concept">
+            <column name="question_id" type="integer">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="concept_id" type="integer">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+
+    <changeSet id="add-question-id-to-create-question" author="Caiden Sunlin">
+        <addForeignKeyConstraint baseTableName="question_concept" baseColumnNames="question_id" 
+        constraintName="id_from_question_to_question_concept" referencedTableName="question" 
+        referencedColumnNames="id" />
+        <rollback>
+            <dropForeignKeyConstraint baseTableName="question_concept"
+              constraintName="id_from_question_to_question_concept"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="add-concept-id-to-create-question" author="Caiden Sunlin">
+        <addForeignKeyConstraint baseTableName="question_concept" baseColumnNames="concept_id" 
+        constraintName="id_from_concept_to_question_concept" referencedTableName="concept" 
+        referencedColumnNames="id" />
+        <rollback>
+            <dropForeignKeyConstraint baseTableName="question_concept"
+              constraintName="id_from_concept_to_question_concept"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="add-compostion-key-question-concept" author="Caiden Sunlin">
+        <addPrimaryKey tableName="question_concept" columnNames="question_id, concept_id"
+        constraintName="question_concept_id"></addPrimaryKey>
+
+        <rollback>
+            <dropPrimaryKey tableName="question_concept"
+            constraintName="question_concept_id"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

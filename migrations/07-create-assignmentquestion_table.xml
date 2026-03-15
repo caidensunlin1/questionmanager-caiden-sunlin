@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog 
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+
+    <changeSet id="create-assignmentquestion" author="Caiden Sunlin">
+
+        <createTable tableName="assignmentquestion">
+
+            <column name="id" type="integer" autoIncrement="true" startWith="100">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="questionnumber" type="integer">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="assignment_id" type="integer">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="question_id" type="integer">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+        <addUniqueConstraint tableName="assignmentquestion" 
+                             columnNames="assignment_id, question_id"
+                             constraintName="unique_assignment_and_question_ids">
+        </addUniqueConstraint>
+    </changeSet>
+
+    <changeSet id="add-assignment-id" author="Caiden Sunlin">
+        <addForeignKeyConstraint 
+                    baseTableName="assignmentquestion" baseColumnNames="assignment_id" 
+                    constraintName="id_from_assignment" referencedTableName="assignment" 
+                    referencedColumnNames="id" />
+
+        <rollback>
+            <dropForeignKeyConstraint baseTableName="assignmentquestion"
+                constraintName="id_from_assignment"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="add-question-id" author="Caiden Sunlin">
+        <addForeignKeyConstraint baseTableName="assignmentquestion" baseColumnNames="question_id"
+                                constraintName="id_from_question" referencedTableName="question"
+                                referencedColumnNames="id" />
+
+        <rollback>
+            <dropForeignKeyConstraint baseTableName="assignmentquestion"
+                constraintName="id_from_question" />
+        </rollback>
+    </changeSet>
+
+    <changeSet id="question-is-one-or-more" author="Caiden Sunlin">
+        <sql>
+            alter table assignmentquestion 
+            add constraint question_is_one_or_more check (questionnumber >= 1);
+        </sql>
+        <rollback>
+            alter table assignmentquestion 
+            drop constraint question_is_one_or_more
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

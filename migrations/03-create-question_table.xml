@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog 
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+
+    <changeSet id="create-question" author="Caiden Sunlin">
+
+        <createTable tableName="question">
+
+            <column name="id" type="integer" autoIncrement="true" startWith="100">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="text" type="text">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="solution" type="varchar">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="created" type="datetime">
+            </column>
+
+            <column name="spaceneeded" type="float">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="timetoanswer" type="integer">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="versionnumber" type="integer" defaultValue="1">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="questiontype_id" type="integer">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="parent_id" type="integer">
+            </column>
+
+        </createTable>
+    </changeSet>
+
+      <changeSet id="add-questiontype_id_to_question" author="Caiden Sunlin">
+        <addForeignKeyConstraint baseTableName="question" baseColumnNames="questiontype_id"
+                                constraintName="id_from_questiontype_to_question" referencedTableName="questiontype"
+                                referencedColumnNames="id" />
+
+        <rollback>
+            <dropForeignKeyConstraint baseTableName="question"
+                constraintName="id_from_questiontype_to_question"/>
+        </rollback>
+    </changeSet>
+
+
+      <changeSet id="add-question-to-question" author="Caiden Sunlin">
+        <addForeignKeyConstraint baseTableName="question" baseColumnNames="parent_id"
+                                constraintName="id_question_to_question" referencedTableName="question"
+                                referencedColumnNames="id" />
+
+        <rollback>
+            <dropForeignKeyConstraint baseTableName="question"
+                constraintName="id_question_to_question" />
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="set-default-time-for-created" author="Caiden Sunlin">
+
+        <addDefaultValue tableName="question" columnName="created" 
+                         defaultValueComputed="CURRENT_TIMESTAMP"/>
+    </changeSet>
+</databaseChangeLog>

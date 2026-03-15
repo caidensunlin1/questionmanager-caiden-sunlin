@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog 
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+
+    <changeSet id="create-assignment" author="Caiden Sunlin">
+        <createTable tableName="assignment">
+            <column name='id' type="integer" autoIncrement="true" startWith="100">
+
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name='name' type="varchar(64)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name='dateassigned' type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            
+            <column name="datedue" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="assignmenttype_id" type="integer" >
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="add-assignmenttype-id" author="Caiden Sunlin">
+        <addForeignKeyConstraint baseTableName="assignment" baseColumnNames="assignmenttype_id"
+                                constraintName="id_from_assignmenttype" referencedTableName="assignmenttype"
+                                referencedColumnNames="id" />
+
+        <rollback>
+            <dropForeignKeyConstraint baseTableName="assignment"
+                constraintName="id_from_assignmenttype" />
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

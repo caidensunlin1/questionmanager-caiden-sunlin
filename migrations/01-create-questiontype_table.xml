@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog 
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+
+   <changeSet author="Caiden Sunlin" id="create-questiontype" >
+    <createTable tableName = "questiontype">
+
+        <!-- Column for the private keys of the table-->
+        <column name="id" type="integer" autoIncrement="true" 
+            startWith="100">
+            
+            <constraints primaryKey="true"/>
+        </column>
+
+        <!-- Column for the names of the questions types-->
+        <column name="name" type="varchar(64)">
+            <constraints nullable="false" unique="true"/>
+        </column>
+
+        <!-- Column for the haschoices-->
+         <column name="haschoice" type="Boolean" defaultValue="false">
+         </column>
+
+    </createTable>
+   </changeSet>
+
+   <changeSet id="populate-questiontype" author="Caiden Sunlin">
+    <insert tableName="questiontype">
+        <column name="name" value="Multiple choice"></column>
+        <column name="haschoice" value="true"></column>
+    </insert>
+    <insert tableName="questiontype">
+        <column name="name" value="Short Answer"></column>
+    </insert>
+    <insert tableName="questiontype">
+        <column name="name" value="Long Answer"></column>
+    </insert>
+    <insert tableName="questiontype">
+        <column name="name" value="Code"></column>
+    </insert>
+    <insert tableName="questiontype">
+        <column name="name" value="Matching"></column>
+        <column name="haschoice" value="true"></column>
+    </insert>
+
+     <rollback>
+            <delete tableName="questiontype">
+                <where>name = 'Matching'</where>
+            </delete>
+            <delete tableName="questiontype">
+                <where>name = 'Code'</where>
+            </delete>
+            <delete tableName="questiontype">
+                <where>name = 'Long Answer'</where>
+            </delete>
+            <delete tableName="questiontype">
+                <where>name = 'Short Answer'</where>
+            </delete>
+            <delete tableName="questiontype">
+                <where>name = 'Multiple choice'</where>
+            </delete>
+        </rollback>
+   </changeSet>
+</databaseChangeLog>

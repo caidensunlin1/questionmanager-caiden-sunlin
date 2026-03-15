@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog 
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+
+    <changeSet id="create-question-taxonomylevel" author="Caiden Sunlin">
+        <createTable tableName="question_taxonomylevel">
+            <column name="question_id" type="integer">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="taxonomylevel_id" type="integer">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+    </changeSet>
+
+    <changeSet id="add-question-id-to-question-taxonomylevel" author="Caiden Sunlin">
+          <addForeignKeyConstraint baseTableName="question_taxonomylevel" baseColumnNames="question_id"
+                                constraintName="id_from_question_to_question_taxonomylevel" referencedTableName="question"
+                                referencedColumnNames="id" />
+
+        <rollback>
+            <dropForeignKeyConstraint baseTableName="question_taxonomylevel"
+                constraintName="id_from_question_to_question_taxonomylevel" />
+        </rollback>
+    </changeSet>
+
+    <changeSet id="add-taxonomylevel-id-to-question-taxonomylevel" author="Caiden Sunlin">
+          <addForeignKeyConstraint baseTableName="question_taxonomylevel" baseColumnNames="taxonomylevel_id"
+                                constraintName="id_from_taxonomylevel_to_question_taxonomylevel" referencedTableName="taxonomylevel"
+                                referencedColumnNames="id" />
+
+        <rollback>
+            <dropForeignKeyConstraint baseTableName="question_taxonomylevel"
+                constraintName="id_from_taxonomylevel_to_question_taxonomylevel" />
+        </rollback>
+    </changeSet>
+
+
+    <changeSet id="add-compostion-key-to-question-taxonomylevel" author="Caiden Sunlin">
+        <addPrimaryKey tableName="question_taxonomylevel" columnNames="question_id, taxonomylevel_id"
+        constraintName="question_taxonomylevel_id"></addPrimaryKey>
+
+        <rollback>
+            <dropPrimaryKey tableName="question_taxonomylevel"
+            constraintName="question_taxonomylevel_id"/>
+        </rollback>
+    </changeSet>
+    
+</databaseChangeLog>

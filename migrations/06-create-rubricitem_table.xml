@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog 
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+
+    <changeSet id="create-rubricitem" author="Caiden Sunlin">
+
+        <createTable tableName="rubricitem">
+
+            <column name="id" type="integer" autoIncrement="true" startWith="100">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="text" type="text">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="pointspossible" type="float">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="question_id" type="integer">
+                <constraints foreignKeyName="id"
+                             references ="question(id)"
+                             nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+
+    <changeSet id="add-question-id-to-rubricitem" author="Caiden Sunlin">
+        <addForeignKeyConstraint baseTableName="rubricitem" baseColumnNames="question_id"
+                                constraintName="id_from_question_to_rubricitem" referencedTableName="question"
+                                referencedColumnNames="id" />
+
+        <rollback>
+            <dropForeignKeyConstraint baseTableName="rubricitem"
+                constraintName="id_from_question_to_rubricitem" />
+        </rollback>
+    </changeSet>
+    
+      <changeSet id="pointspossible-greater-or-equal-to-zero" author="Caien Sunlin">
+        <sql>
+            alter table rubricitem 
+            add constraint positive_points check (pointspossible >= 0);
+        </sql>
+        <rollback>
+            alter table rubricitem 
+            drop constraint positive_points
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

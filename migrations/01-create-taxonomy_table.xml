@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog 
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+
+    <changeSet id="create-taxonomy" author="Caiden Sunlin">
+        <createTable tableName = "taxonomy">
+            <column name="id" type="integer" autoIncrement="true" startWith="100">
+
+                    <constraints primaryKey="true"/>
+            </column>
+
+            <column name="name" type="varchar(64)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+        </createTable>
+    </changeSet>
+
+    <changeSet id="populate-taxonomy" author="Caiden Sunlin">
+        <insert tableName="taxonomy">
+            <column name="name" value="Bloom's Taxonomy"></column>
+            <column name="id" value="1"></column>
+        </insert>
+
+
+        <rollback>
+            <delete tableName="taxonomy">
+            <where>name = 'Bloom''s Taxonomy'</where>
+            </delete>
+        </rollback>
+    </changeSet>
+    
+</databaseChangeLog>

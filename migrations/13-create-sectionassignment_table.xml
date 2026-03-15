@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog 
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+
+    <changeSet id="create-sectionassignment" author="Caiden Sunlin">
+        <createTable tableName="sectionassignment">
+            <column name="id" type="integer" autoIncrement="true" startWith="100">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="dateassigned" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="datedue" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="section_id" type="integer">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="assignment_id" type="integer">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+        <addUniqueConstraint tableName="sectionassignment" 
+                            columnNames="section_id, assignment_id"
+                            constraintName="unique_section_assignment_ids">
+        </addUniqueConstraint>
+    </changeSet>
+
+    <changeSet id="add-section_id-to-sectionassignment" author="Caiden Sunlin">
+        <addForeignKeyConstraint 
+                    baseTableName="sectionassignment" baseColumnNames="section_id" 
+                    constraintName="id_from_section_to_sectionassignment" referencedTableName="section" 
+                    referencedColumnNames="id" />
+
+        <rollback>
+            <dropForeignKeyConstraint baseTableName="sectionassignment"
+                constraintName="id_from_section_to_sectionassignment"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="add-assignment_id-to-sectionassignment" author="Caiden Sunlin">
+        <addForeignKeyConstraint 
+                    baseTableName="sectionassignment" baseColumnNames="assignment_id" 
+                    constraintName="id_from_assignment_to_sectionassignment" referencedTableName="assignment" 
+                    referencedColumnNames="id"/>
+
+        <rollback>
+            <dropForeignKeyConstraint baseTableName="sectionassignment"
+                constraintName="id_from_assignment_to_sectionassignment"/>
+        </rollback>
+    </changeSet>
+    
+</databaseChangeLog>

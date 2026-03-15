@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog 
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+
+    <changeSet id="create-course" author="Caiden Sunlin">
+
+      
+
+        <createTable tableName="course">
+            
+            <column name="id" type="int">
+                <constraints primaryKey="true"/>    
+            </column>
+
+            <column name="title" type="varchar(32)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="subject" type="varchar(4)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="number" type="varchar(5)">
+                <constraints nullable="false"/>
+            </column>
+
+            
+        </createTable>
+
+
+          <addUniqueConstraint tableName="course" 
+                             columnNames="subject, number"
+                             constraintName="unique_sub_and_num"
+        ></addUniqueConstraint>
+    </changeSet>
+    
+    
+</databaseChangeLog>

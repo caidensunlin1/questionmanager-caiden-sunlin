@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog 
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+
+    <changeSet id="create-section" author="Caiden Sunlin">
+        <createTable tableName="section">
+            <column name="id" type="Integer" autoIncrement="true" startWith="100">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="crn" type="integer" autoIncrement="true" startWith="100">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="sectionnumber" type="char(4)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="term" type="integer">
+                <constraints  nullable="false"/>
+            </column>
+
+
+            <column name="course_id" type="integer">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addUniqueConstraint tableName="section" 
+                            columnNames="term, crn"
+                            constraintName="unique_term_and_crn"></addUniqueConstraint>
+    </changeSet>
+
+
+
+    <changeSet id="add-course-id-to-section" author="Caiden Sunlin">
+         <addForeignKeyConstraint baseTableName="section" baseColumnNames="course_id"
+                                constraintName="id_from_course_to_section" referencedTableName="course"
+                                referencedColumnNames="id" />
+
+        <rollback>
+            <dropForeignKeyConstraint baseTableName="section"
+                constraintName="id_from_course_to_section" />
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog 
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+
+    <changeSet id="create-questionchoice" author="Caiden Sunlin">
+        
+        <createTable tableName="questionchoice">
+
+            <column name="id" type="integer" autoIncrement="true" startWith="100">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="text" type="text">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="position" type="integer">
+                <constraints nullable="false"/>
+            </column>
+
+          
+            <column name="percentcorrect" type="float">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="question_id" type="integer">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        
+    </changeSet>
+
+
+    <changeSet id="add-question-id-to-questionchoice" author="Caiden Sunlin">
+        <addForeignKeyConstraint baseTableName="questionchoice" baseColumnNames="question_id"
+                                constraintName="id_from_question_to_questionchoice" referencedTableName="question"
+                                referencedColumnNames="id" />
+
+        <rollback>
+            <dropForeignKeyConstraint baseTableName="questionchoice"
+                constraintName="id_from_question_to_questionchoice" />
+        </rollback>
+    </changeSet>
+    
+
+    <changeSet id="position-greater-or-equal-to-one" author="Caien Sunlin">
+        <sql>
+            alter table questionchoice
+            add constraint position_greater_than_one check (position >=1);
+        </sql>
+        <rollback>
+            alter table questionchoice 
+            drop constraint position_greater_than_one
+        </rollback>
+    </changeSet>
+    
+   
+
+
+    <changeSet id="percentcorrect-between-zero-and-one" author="Caien Sunlin">
+       <sql>
+        alter table questionchoice 
+        add constraint percent_between_zero_and_one check (position between 0 and 1);
+       </sql>
+       <rollback>
+            alter table questionchoice 
+            drop constraint percent_between_zero_and_one
+       </rollback>
+    </changeSet>
+
+</databaseChangeLog>

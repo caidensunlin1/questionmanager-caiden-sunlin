@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog 
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+
+    <changeSet id="disallow-update-delete-past-due-date" author="Caiden Sunlin">
+        <sql splitStatements="false">
+            create or replace function prevent_question_updates_or_deletions()
+            returns trigger as $$ 
+            begin 
+            if exists(
+                select q.id 
+                from question q
+                join assignmentquestion aq on aq.question_id = q.id 
+                join assignment a on a.id = aq.assignment_id
+                where CURRENT_DATE > a.datedue 
+                      and OLD.id = q.id 
+            ) then 
+                raise exception 'Cannot update a question for an assignment that past its duedate';
+                end if; 
+                return OLD;
+            end;
+            $$ LANGUAGE plpgsql;
+
+
+            create trigger prevent_updates_or_deletions_to_questions_past_duedates
+            before update or delete on question 
+            for each row 
+            execute function prevent_question_updates_or_deletions();
+        </sql>
+
+        
+        <rollback>
+            drop trigger if exists prevent_updates_or_deletions_to_questions_past_duedates on question;
+            drop function if exists prevent_question_updates_or_deletions(); 
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

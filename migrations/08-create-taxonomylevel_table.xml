@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog 
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+
+    <changeSet id="create-taxonomylevel" author="Caiden Sunlin">
+        <createTable tableName="taxonomylevel">
+
+            <column name="id" type="integer" autoIncrement="true" startWith="100">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="name" type="varchar(64)">
+                <constraints nullable="false"/> 
+            </column>
+
+            <column name="taxonomy_order" type="integer">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="taxonomy_id" type="integer">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <addUniqueConstraint tableName="taxonomylevel" 
+                             columnNames="id, name"
+                             constraintName="unique_id_and_name"></addUniqueConstraint>
+    </changeSet>
+
+
+    <changeSet id="order-greater-or-equal-to-one" author="Caiden Sunlin">
+           <sql>
+            alter table taxonomylevel
+            add constraint order_greater_or_equal_to_one check (taxonomy_order >=1);
+           </sql>
+           <rollback>
+            alter table taxonomylevel 
+            drop constraint order_greater_or_equal_to_one
+           </rollback>
+    </changeSet>
+
+
+
+    <changeSet id="populate-taxonmylevel" author="Caiden Sunlin">
+
+        <insert tableName="taxonomylevel">
+            <column name="id" value="1"></column>
+            <column name="name" value="Knowledge"></column>
+            <column name="taxonomy_order" value="1"></column>
+            <column name="taxonomy_id" value="1"></column>
+        </insert>
+        <insert tableName="taxonomylevel">
+            <column name="id" value="2"></column>
+            <column name="name" value="Comprehension"></column>
+            <column name="taxonomy_order" value="2"></column>
+            <column name="taxonomy_id" value="1"></column>
+        </insert>
+        <insert tableName="taxonomylevel">
+            <column name="id" value="3"></column>
+            <column name="name" value="Application"></column>
+            <column name="taxonomy_order" value="3"></column>
+            <column name="taxonomy_id" value="1"></column>
+        </insert>
+        <insert tableName="taxonomylevel">
+            <column name="id" value="4"></column>
+            <column name="name" value="Analysis"></column>
+            <column name="taxonomy_order" value="4"></column>
+            <column name="taxonomy_id" value="1"></column>
+        </insert>
+        <insert tableName="taxonomylevel">
+            <column name="id" value="5"></column>
+            <column name="name" value="Synthesis"></column>
+            <column name="taxonomy_order" value="5"></column>
+            <column name="taxonomy_id" value="1"></column>
+        </insert>
+        <insert tableName="taxonomylevel">
+            <column name="id" value="6"></column>
+            <column name="name" value="Evaluation"></column>
+            <column name="taxonomy_order" value="6"></column>
+            <column name="taxonomy_id" value="1"></column>
+        </insert>
+
+        <rollback>
+            <delete tableName="taxonomylevel">
+                <where>name = 'Knowledge'</where>                
+            </delete>
+            <delete tableName="taxonomylevel">
+                <where>name = 'Comprehension'</where>                
+            </delete>
+            <delete tableName="taxonomylevel">
+                <where>name = 'Application'</where>                
+            </delete>
+            <delete tableName="taxonomylevel">
+                <where>name = 'Analysis'</where>                
+            </delete>
+            <delete tableName="taxonomylevel">
+                <where>name = 'Synthesis'</where>                
+            </delete>
+            <delete tableName="taxonomylevel">
+                <where>name = 'Evaluation'</where>                
+            </delete>
+        </rollback>
+    </changeSet>
+
+
+     <changeSet id="add-taxonmoy_id-to-taxonomylevel" author="Caiden Sunlin">
+        <addForeignKeyConstraint baseTableName="taxonomylevel" baseColumnNames="taxonomy_id" 
+        constraintName="add_taxonomy_id_to_taxonomylevel" referencedTableName="taxonomy" 
+        referencedColumnNames="id" />
+
+    </changeSet>
+
+</databaseChangeLog>
